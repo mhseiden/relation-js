@@ -1,7 +1,7 @@
 // @flow /* eslint-env jest */
 import { mkTestTable } from '../utils.test.js'
 import { Scan, Filter } from './index.js'
-import { Literal, Reference, IsNull, Not, Eq } from '../expression'
+import { Literal, Reference, IsNull, Not, Eq, Ne } from '../expression'
 
 function mkScan (): Scan {
   return new Scan(mkTestTable())
@@ -56,6 +56,22 @@ test('filter == 2', () => {
   const result = mkTestTable()
   for (const col of result) {
     col[1].data = col[1].data.filter((e, i) => i === 2)
+  }
+
+  expect(filter.execute()).toEqual(result)
+})
+
+test('filter != 1 and != 2', () => {
+  const ref = new Reference('number')
+  const p1 = new Ne(ref, new Literal(1))
+  const p2 = new Ne(ref, new Literal(2))
+  const filter = new Filter(mkScan(), [p1,p2])
+
+  const result = mkTestTable()
+  for (const col of result) {
+    col[1].data = col[1].data.filter((e, i) => {
+      return (e != null) && (e < 1 || e > 2)
+    })
   }
 
   expect(filter.execute()).toEqual(result)

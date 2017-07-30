@@ -15,6 +15,19 @@ export class Eq extends BinaryNode {
   }
 }
 
+export class Ne extends BinaryNode {
+  constructor (l: Expression<*>, r: Expression<*>) {
+    super(l, r, 'ne')
+  }
+  typecheck (refs: ReferenceMap): DataType {
+    const l = this.children[0].typecheck(refs)
+    const r = this.children[1].typecheck(refs)
+    same(l, r)
+
+    return BOOLEAN_TYPE
+  }
+}
+
 export class And extends BinaryNode {
   constructor (l: Expression<*>, r: Expression<*>) {
     super(l, r, 'and')

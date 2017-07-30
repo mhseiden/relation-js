@@ -13,6 +13,7 @@ type StringOps =
 
 type BooleanOps =
   "eq" |
+  "ne" |
   "and" |
   "or" |
   "not" |

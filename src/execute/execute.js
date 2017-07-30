@@ -31,6 +31,10 @@ export default function (e: Expression<*>, t: Table): DataColumn<any> {
     return boolExec.not(e, t)
   } else if (e instanceof boolExpr.Eq) {
     return boolExec.eq(e, t)
+  } else if (e instanceof boolExpr.Ne) {
+    return boolExec.ne(e, t)
+  } else if (e instanceof boolExpr.And) {
+    return boolExec.and(e, t)
   }
 
   // misc
