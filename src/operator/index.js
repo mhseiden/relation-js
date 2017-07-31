@@ -1,8 +1,10 @@
 // @flow
 import * as expr from '../expression'
-import execute, { type Table } from '../execute'
+import execute, { type Table, aggregate } from '../execute'
 
+type AggExpr<T> = expr.Aggregate<T>;
 type Expression<T> = expr.Expression<T>;
+type NamedExpression = [string, Expression<*>];
 
 class Operator {
   _child: ?Operator;
@@ -38,9 +40,9 @@ export class Scan extends Operator {
 }
 
 export class Project extends Operator {
-  expressions: Array<[string, Expression<*>]>;
+  expressions: Array<NamedExpression>;
 
-  constructor (child: Operator, expressions: Array<[string, Expression<*>]>) {
+  constructor (child: Operator, expressions: Array<NamedExpression>) {
     super(child)
     this.expressions = expressions
   }
@@ -68,6 +70,24 @@ export class Filter extends Operator {
     const { data } = execute(this.predicate, child)
     return child.map(([name, col]) => {
       return [name, col.select(data)]
+    })
+  }
+}
+
+export class Aggregate extends Operator {
+  keys: Array<Expression<*>>;
+  aggs: Array<[string, AggExpr<*>]>;
+
+  constructor (child: Operator, keys: Array<Expression<*>>, aggs: Array<[string, AggExpr<*>]>) {
+    super(child)
+      this.keys = keys
+      this.aggs = aggs
+  }
+
+  execute (): Table {
+    const child = this.child().execute()
+    return aggregate(child, this.keys, this.aggs.map(a => a[1])).map((c, i) => {
+      return [this.aggs[i][0], c]
     })
   }
 }

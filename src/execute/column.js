@@ -17,6 +17,19 @@ export class DataColumn<T> {
     this.data = data
   }
 
+  static fromType(type: string, data: Array<any>): DataColumn<any> {
+    switch (type) {
+      case STRING_TYPE:
+        return new StringColumn((data: Array<?string>))
+      case NUMBER_TYPE:
+        return new NumberColumn((data: Array<?number>))
+      case BOOLEAN_TYPE:
+        return new BooleanColumn((data: Array<?boolean>))
+      default:
+        return new UnknownColumn((data: Array<?null>))
+    }
+  }
+
   select (selector: Array<?boolean>): DataColumn<?T> {
     return new DataColumn(this.type, this.data.filter((e, i) => {
       return selector[i] || false

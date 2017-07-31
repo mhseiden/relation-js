@@ -1,6 +1,6 @@
 // @flow
 import { type DataType } from './type.js'
-import { type Operator } from './op.js'
+import { type Operator, type Aggregator } from './op.js'
 
 export type ReferenceMap = { [string]: DataType };
 
@@ -15,6 +15,14 @@ export class Expression<Op: Operator> {
 
   typecheck (r: ReferenceMap): DataType {
     throw new Error('typecheck() is not implemented')
+  }
+}
+
+export class Aggregate<Op: Aggregator> extends Expression<Op> {
+input: Expression<*>;
+  constructor (c: Expression<*>, op: Op) {
+    super([c], op)
+    this.input = c
   }
 }
 

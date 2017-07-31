@@ -1,5 +1,4 @@
 // @flow
-
 import { type ReferenceMap, Expression } from '../expression'
 import { type Table, type DataColumn } from './column.js'
 
@@ -28,3 +27,4 @@ export default function (expression: Expression<*>, table: Table): DataColumn<*>
 }
 
 export * from './column.js'
+export { default as aggregate } from './aggregate.js'

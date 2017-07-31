@@ -23,7 +23,15 @@ type MiscOps =
   "literal" |
   "reference";
 
+export type Aggregator =
+  "count" |
+  "cvl" |
+  "min" |
+  "max" |
+  "sum";
+
 export type Operator =
+  Aggregator |
   NumericOps |
   StringOps |
   BooleanOps |
