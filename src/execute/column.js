@@ -17,7 +17,7 @@ export class DataColumn<T> {
     this.data = data
   }
 
-  static fromType(type: string, data: Array<any>): DataColumn<any> {
+  static fromType (type: string, data: Array<any>): DataColumn<any> {
     switch (type) {
       case STRING_TYPE:
         return new StringColumn((data: Array<?string>))

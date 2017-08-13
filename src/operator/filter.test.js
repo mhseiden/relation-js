@@ -65,7 +65,7 @@ test('filter != 1 and != 2', () => {
   const ref = new Reference('number')
   const p1 = new Ne(ref, new Literal(1))
   const p2 = new Ne(ref, new Literal(2))
-  const filter = new Filter(mkScan(), [p1,p2])
+  const filter = new Filter(mkScan(), [p1, p2])
 
   const result = mkTestTable()
   for (const col of result) {

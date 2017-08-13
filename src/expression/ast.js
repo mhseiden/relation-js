@@ -19,7 +19,7 @@ export class Expression<Op: Operator> {
 }
 
 export class Aggregate<Op: Aggregator> extends Expression<Op> {
-input: Expression<*>;
+  input: Expression<*>;
   constructor (c: Expression<*>, op: Op) {
     super([c], op)
     this.input = c

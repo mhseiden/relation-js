@@ -80,8 +80,8 @@ export class Aggregate extends Operator {
 
   constructor (child: Operator, keys: Array<Expression<*>>, aggs: Array<[string, AggExpr<*>]>) {
     super(child)
-      this.keys = keys
-      this.aggs = aggs
+    this.keys = keys
+    this.aggs = aggs
   }
 
   execute (): Table {

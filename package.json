@@ -6,10 +6,10 @@
   "scripts": {
     "lint": "standard --fix \"src/**/*.js\"",
     "flow": "flow",
-    "jest": "jest",
-    "test": "flow && jest ./src/",
-    "bench": "flow && jest --verbose ./bench/",
+    "test": "flow && jest -i ./src/",
+    "babel": "babel src/ -d lib/",
     "build": "npm run lint && babel src/ -d lib/",
+    "release": "npm run lint && ./node_modules/babel-minify/lib/cli.js src/ -o ./relation.min.js",
     "prepublish": "npm run build"
   },
   "author": "Max Seiden <140dbs@gmail.com>",
@@ -19,7 +19,7 @@
     "babel-eslint": "^7.2.3",
     "babel-jest": "^20.0.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
     "babel-preset-flow": "^6.23.0",
     "benchmark": "^2.1.4",
     "eslint-plugin-flowtype": "^2.35.0",
