@@ -1,7 +1,8 @@
 // @flow
-import { type Expression, Aggregate, type Aggregator } from '../expression'
+import { type Expression, Aggregate } from '../expression/index.js'
+import { type Aggregator } from '../expression/op.js'
 import { type Table, DataColumn } from './column.js'
-import execute from './execute'
+import execute from './execute.js'
 
 const DEFAULT_ID = 0
 

@@ -1,7 +1,8 @@
 // @flow
 import * as util from './util.js'
 import { type Table, BooleanColumn } from './column.js'
-import { Expression, BOOLEAN_TYPE } from '../expression'
+import { Expression } from '../expression/index.js'
+import { BOOLEAN_TYPE } from '../expression/type.js'
 
 import execute from './execute.js'
 import * as b00l from '../expression/boolean'

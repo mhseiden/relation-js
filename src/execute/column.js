@@ -6,7 +6,7 @@ import {
   STRING_TYPE,
   BOOLEAN_TYPE,
   UNKNOWN_TYPE
-} from '../expression'
+} from '../expression/type.js'
 
 export class DataColumn<T> {
   data: Array<?T>;

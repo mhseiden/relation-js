@@ -6,11 +6,8 @@
   "scripts": {
     "lint": "standard --fix \"src/**/*.js\"",
     "flow": "flow",
-    "test": "flow && jest -i ./src/",
-    "babel": "babel src/ -d lib/",
-    "build": "npm run lint && babel src/ -d lib/",
-    "release": "npm run lint && ./node_modules/babel-minify/lib/cli.js src/ -o ./relation.min.js",
-    "prepublish": "npm run build"
+    "test": "npm run flow && jest -i ./src/",
+    "build": "npm run test && rollup -c && uglifyjs -c -m -o relation.min.js -- relation.js"
   },
   "author": "Max Seiden <140dbs@gmail.com>",
   "license": "MIT",
@@ -18,6 +15,7 @@
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-jest": "^20.0.3",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-flow": "^6.23.0",
@@ -26,7 +24,10 @@
     "flow-bin": "^0.51.0",
     "flow-remove-types": "^1.2.1",
     "jest": "^20.0.4",
-    "standard": "^10.0.2"
+    "rollup": "^0.47.2",
+    "rollup-plugin-babel": "^3.0.1",
+    "standard": "^10.0.2",
+    "uglify-js": "^3.0.27"
   },
   "jest": {
     "verbose": true

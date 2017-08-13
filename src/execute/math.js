@@ -1,7 +1,8 @@
 // @flow
 import * as util from './util.js'
 import { type Table, NumberColumn } from './column.js'
-import { Expression, NUMBER_TYPE } from '../expression'
+import { Expression } from '../expression/index.js'
+import { NUMBER_TYPE } from '../expression/type.js'
 
 import execute from './execute.js'
 import * as math from '../expression/math'

@@ -1,6 +1,6 @@
 // @flow
 
-import { Expression } from '../expression'
+import { Expression } from '../expression/index.js'
 import { type Table, type DataColumn } from './column'
 
 import * as mathExpr from '../expression/math'

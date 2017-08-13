@@ -1,8 +1,20 @@
 // @flow
-export { Expression, Aggregate, ReferenceMap } from './ast.js'
-export { Operator, Aggregator } from './op.js'
+import {
+  UNKNOWN_TYPE,
+  NUMBER_TYPE,
+  STRING_TYPE,
+  BOOLEAN_TYPE
+} from './type.js'
+
+export { Expression, Aggregate } from './ast.js'
 export * from './attr.js'
 export * from './aggregate.js'
 export * from './boolean.js'
 export * from './math.js'
-export * from './type.js'
+
+export const types = {
+  UNKNOWN_TYPE,
+  NUMBER_TYPE,
+  STRING_TYPE,
+  BOOLEAN_TYPE
+}

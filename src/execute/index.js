@@ -1,5 +1,6 @@
 // @flow
-import { type ReferenceMap, Expression } from '../expression'
+import { Expression } from '../expression/index.js'
+import { type ReferenceMap } from '../expression/ast.js'
 import { type Table, type DataColumn } from './column.js'
 
 import execute from './execute.js'

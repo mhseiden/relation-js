@@ -1,6 +1,6 @@
 // @flow
-import * as expr from '../expression'
-import execute, { type Table, aggregate } from '../execute'
+import * as expr from '../expression/index.js'
+import execute, { type Table, aggregate } from '../execute/index.js'
 
 type AggExpr<T> = expr.Aggregate<T>;
 type Expression<T> = expr.Expression<T>;
