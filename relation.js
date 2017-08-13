@@ -768,12 +768,12 @@ function binop(e, t, f) {
   return new NumberColumn(data);
 }
 
-function _ref(a, b) {
+function _ref$1(a, b) {
   return a + b;
 }
 
 function add(e, t) {
-  return binop(e, t, _ref);
+  return binop(e, t, _ref$1);
 }
 
 function _ref2(a, b) {
@@ -784,20 +784,20 @@ function sub(e, t) {
   return binop(e, t, _ref2);
 }
 
-function _ref3$1(a, b) {
+function _ref3(a, b) {
   return a * b;
 }
 
 function mul(e, t) {
-  return binop(e, t, _ref3$1);
+  return binop(e, t, _ref3);
 }
 
-function _ref4(a, b) {
+function _ref4$1(a, b) {
   return a / b;
 }
 
 function div(e, t) {
-  return binop(e, t, _ref4);
+  return binop(e, t, _ref4$1);
 }
 
 function reference(e, t) {
@@ -845,12 +845,12 @@ function cmpBool(e, t, f) {
   return new BooleanColumn(data);
 }
 
-function _ref$1(a, b) {
+function _ref$2(a, b) {
   return a === b;
 }
 
 function eq(e, t) {
-  return cmp(e, t, _ref$1);
+  return cmp(e, t, _ref$2);
 }
 
 function _ref2$1(a, b) {
@@ -861,20 +861,20 @@ function ne(e, t) {
   return cmp(e, t, _ref2$1);
 }
 
-function _ref3$2(a, b) {
+function _ref3$1(a, b) {
   return a > b;
 }
 
 function gt(e, t) {
-  return cmp(e, t, _ref3$2);
+  return cmp(e, t, _ref3$1);
 }
 
-function _ref4$1(a, b) {
+function _ref4$2(a, b) {
   return a >= b;
 }
 
 function gte(e, t) {
-  return cmp(e, t, _ref4$1);
+  return cmp(e, t, _ref4$2);
 }
 
 function _ref5(a, b) {
@@ -885,12 +885,12 @@ function lt(e, t) {
   return cmp(e, t, _ref5);
 }
 
-function _ref6$1(a, b) {
+function _ref6(a, b) {
   return a <= b;
 }
 
 function lte(e, t) {
-  return cmp(e, t, _ref6$1);
+  return cmp(e, t, _ref6);
 }
 
 function _ref7(a, b) {
@@ -1074,7 +1074,7 @@ var Accumulator = function () {
   return Accumulator;
 }();
 
-function _ref$2(acc) {
+function _ref$3(acc) {
   return acc.init();
 }
 
@@ -1087,7 +1087,7 @@ function _insert3(row, key) {
 
   var accs = this.accs[keyString];
   if (accs == null) {
-    accs = this.init.map(_ref$2);
+    accs = this.init.map(_ref$3);
     this.accs[keyString] = accs;
   }
 
@@ -1192,7 +1192,7 @@ var AggMap = function () {
   return AggMap;
 }();
 
-function _ref3$3() {
+function _ref3$2() {
   return new KeyMap();
 }
 
@@ -1203,7 +1203,7 @@ var aggregate = function (table, keys, aggs) {
   var keyData = keys.map(function (e) {
     return execute(e, table);
   });
-  var keyMaps = keyData.map(_ref3$3);
+  var keyMaps = keyData.map(_ref3$2);
 
   var rowKey = new Uint32Array(keyCount);
   var aggMap = new AggMap(aggs, table);
@@ -1348,12 +1348,8 @@ var Scan = function (_Operator) {
 
 function _execute4() {
   var child = this.child().execute();
-  return this.expressions.map(function (_ref) {
-    var _ref2 = slicedToArray(_ref, 2),
-        name = _ref2[0],
-        expr = _ref2[1];
-
-    return [name, _execute3(expr, child)];
+  return this.expressions.map(function (nameAndExpr) {
+    return [nameAndExpr[0], _execute3(nameAndExpr[1], child)];
   });
 }
 
@@ -1376,7 +1372,7 @@ var Project = function (_Operator2) {
   return Project;
 }(Operator);
 
-function _ref3(l, r) {
+function _ref(l, r) {
   return new And(l, r);
 }
 
@@ -1386,10 +1382,10 @@ function _execute6() {
   var _execute5 = _execute3(this.predicate, child),
       data = _execute5.data;
 
-  return child.map(function (_ref4) {
-    var _ref5 = slicedToArray(_ref4, 2),
-        name = _ref5[0],
-        col = _ref5[1];
+  return child.map(function (_ref2) {
+    var _ref3 = slicedToArray(_ref2, 2),
+        name = _ref3[0],
+        col = _ref3[1];
 
     return [name, col.select(data)];
   });
@@ -1403,7 +1399,7 @@ var Filter = function (_Operator3) {
 
     var _this3 = possibleConstructorReturn(this, (Filter.__proto__ || Object.getPrototypeOf(Filter)).call(this, child));
 
-    _this3.predicate = predicates.reduce(_ref3);
+    _this3.predicate = predicates.reduce(_ref);
     return _this3;
   }
 
@@ -1414,7 +1410,7 @@ var Filter = function (_Operator3) {
   return Filter;
 }(Operator);
 
-function _ref6(a) {
+function _ref4(a) {
   return a[1];
 }
 
@@ -1422,7 +1418,7 @@ function _execute7() {
   var _this5 = this;
 
   var child = this.child().execute();
-  return aggregate(child, this.keys, this.aggs.map(_ref6)).map(function (c, i) {
+  return aggregate(child, this.keys, this.aggs.map(_ref4)).map(function (c, i) {
     return [_this5.aggs[i][0], c];
   });
 }

@@ -40,7 +40,7 @@
     const table = document.getElementById('results');
     table.appendChild(row);
 
-    const runner = new Benchmark(name, () => plan.execute());
+    const runner = new Benchmark(name, (function() { plan.execute() }).bind({}));
     setTimeout(execute.bind({ runner: runner, row: row }), WAIT_TIME);
   }
 
