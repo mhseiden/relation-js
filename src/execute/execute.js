@@ -33,6 +33,14 @@ export default function (e: Expression<*>, t: Table): DataColumn<any> {
     return boolExec.eq(e, t)
   } else if (e instanceof boolExpr.Ne) {
     return boolExec.ne(e, t)
+  } else if (e instanceof boolExpr.Gt) {
+    return boolExec.gt(e, t)
+  } else if (e instanceof boolExpr.Gte) {
+    return boolExec.gte(e, t)
+  } else if (e instanceof boolExpr.Lt) {
+    return boolExec.lt(e, t)
+  } else if (e instanceof boolExpr.Lte) {
+    return boolExec.lte(e, t)
   } else if (e instanceof boolExpr.And) {
     return boolExec.and(e, t)
   }

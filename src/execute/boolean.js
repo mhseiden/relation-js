@@ -44,6 +44,22 @@ export function ne (e: b00l.Ne, t: Table): BooleanColumn {
   return cmp(e, t, (a, b) => a !== b)
 }
 
+export function gt (e: b00l.Gt, t: Table): BooleanColumn {
+  return cmp(e, t, (a, b) => a > b)
+}
+
+export function gte (e: b00l.Gte, t: Table): BooleanColumn {
+  return cmp(e, t, (a, b) => a >= b)
+}
+
+export function lt (e: b00l.Lt, t: Table): BooleanColumn {
+  return cmp(e, t, (a, b) => a < b)
+}
+
+export function lte (e: b00l.Lte, t: Table): BooleanColumn {
+  return cmp(e, t, (a, b) => a <= b)
+}
+
 export function and (e: b00l.And, t: Table): BooleanColumn {
   return cmpBool(e, t, (a, b) => a && b)
 }

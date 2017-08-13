@@ -1,7 +1,7 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(factory((global.reljs = {})));
+	(factory((global.relation = {})));
 }(this, (function (exports) { 'use strict';
 
 var UNKNOWN_TYPE = 'unknown';
@@ -314,6 +314,14 @@ var Sum = function (_Aggregate5) {
   return Sum;
 }(Aggregate$1);
 
+function checkCmp(children, refs) {
+  var l = children[0].typecheck(refs);
+  var r = children[1].typecheck(refs);
+  same(l, r);
+
+  return BOOLEAN_TYPE;
+}
+
 var Eq = function (_BinaryNode) {
   inherits(Eq, _BinaryNode);
 
@@ -325,11 +333,7 @@ var Eq = function (_BinaryNode) {
   createClass(Eq, [{
     key: 'typecheck',
     value: function typecheck(refs) {
-      var l = this.children[0].typecheck(refs);
-      var r = this.children[1].typecheck(refs);
-      same(l, r);
-
-      return BOOLEAN_TYPE;
+      return checkCmp(this.children, refs);
     }
   }]);
   return Eq;
@@ -346,18 +350,82 @@ var Ne = function (_BinaryNode2) {
   createClass(Ne, [{
     key: 'typecheck',
     value: function typecheck(refs) {
-      var l = this.children[0].typecheck(refs);
-      var r = this.children[1].typecheck(refs);
-      same(l, r);
-
-      return BOOLEAN_TYPE;
+      return checkCmp(this.children, refs);
     }
   }]);
   return Ne;
 }(BinaryNode);
 
-var And = function (_BinaryNode3) {
-  inherits(And, _BinaryNode3);
+var Gt = function (_BinaryNode3) {
+  inherits(Gt, _BinaryNode3);
+
+  function Gt(l, r) {
+    classCallCheck(this, Gt);
+    return possibleConstructorReturn(this, (Gt.__proto__ || Object.getPrototypeOf(Gt)).call(this, l, r, 'gt'));
+  }
+
+  createClass(Gt, [{
+    key: 'typecheck',
+    value: function typecheck(refs) {
+      return checkCmp(this.children, refs);
+    }
+  }]);
+  return Gt;
+}(BinaryNode);
+
+var Gte = function (_BinaryNode4) {
+  inherits(Gte, _BinaryNode4);
+
+  function Gte(l, r) {
+    classCallCheck(this, Gte);
+    return possibleConstructorReturn(this, (Gte.__proto__ || Object.getPrototypeOf(Gte)).call(this, l, r, 'gte'));
+  }
+
+  createClass(Gte, [{
+    key: 'typecheck',
+    value: function typecheck(refs) {
+      return checkCmp(this.children, refs);
+    }
+  }]);
+  return Gte;
+}(BinaryNode);
+
+var Lt = function (_BinaryNode5) {
+  inherits(Lt, _BinaryNode5);
+
+  function Lt(l, r) {
+    classCallCheck(this, Lt);
+    return possibleConstructorReturn(this, (Lt.__proto__ || Object.getPrototypeOf(Lt)).call(this, l, r, 'lt'));
+  }
+
+  createClass(Lt, [{
+    key: 'typecheck',
+    value: function typecheck(refs) {
+      return checkCmp(this.children, refs);
+    }
+  }]);
+  return Lt;
+}(BinaryNode);
+
+var Lte = function (_BinaryNode6) {
+  inherits(Lte, _BinaryNode6);
+
+  function Lte(l, r) {
+    classCallCheck(this, Lte);
+    return possibleConstructorReturn(this, (Lte.__proto__ || Object.getPrototypeOf(Lte)).call(this, l, r, 'lte'));
+  }
+
+  createClass(Lte, [{
+    key: 'typecheck',
+    value: function typecheck(refs) {
+      return checkCmp(this.children, refs);
+    }
+  }]);
+  return Lte;
+}(BinaryNode);
+
+var And = function (_BinaryNode7) {
+  inherits(And, _BinaryNode7);
 
   function And(l, r) {
     classCallCheck(this, And);
@@ -507,6 +575,10 @@ var index$1 = Object.freeze({
 	Sum: Sum,
 	Eq: Eq,
 	Ne: Ne,
+	Gt: Gt,
+	Gte: Gte,
+	Lt: Lt,
+	Lte: Lte,
 	And: And,
 	Not: Not,
 	IsNull: IsNull,
@@ -733,6 +805,30 @@ function ne(e, t) {
   });
 }
 
+function gt(e, t) {
+  return cmp(e, t, function (a, b) {
+    return a > b;
+  });
+}
+
+function gte(e, t) {
+  return cmp(e, t, function (a, b) {
+    return a >= b;
+  });
+}
+
+function lt(e, t) {
+  return cmp(e, t, function (a, b) {
+    return a < b;
+  });
+}
+
+function lte(e, t) {
+  return cmp(e, t, function (a, b) {
+    return a <= b;
+  });
+}
+
 function and(e, t) {
   return cmpBool(e, t, function (a, b) {
     return a && b;
@@ -780,6 +876,14 @@ var execute = function (e, t) {
     return eq(e, t);
   } else if (e instanceof Ne) {
     return ne(e, t);
+  } else if (e instanceof Gt) {
+    return gt(e, t);
+  } else if (e instanceof Gte) {
+    return gte(e, t);
+  } else if (e instanceof Lt) {
+    return lt(e, t);
+  } else if (e instanceof Lte) {
+    return lte(e, t);
   } else if (e instanceof And) {
     return and(e, t);
   }
@@ -793,6 +897,37 @@ var execute = function (e, t) {
 
   throw new Error('Missing handler for op: ' + e.op);
 };
+
+// (max) XXX TODO - error checking during the load process...
+function loadColumns(columns) {
+  var table = [];
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = columns[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var c = _step.value;
+
+      table.push([c.name, DataColumn.fromType(c.type, c.data)]);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return table;
+}
 
 var DEFAULT_ID = 0;
 
@@ -1204,8 +1339,11 @@ var index = Object.freeze({
 	Aggregate: Aggregate
 });
 
+var loaders = { loadColumns: loadColumns };
+
 exports.operator = index;
 exports.expression = index$1;
+exports.loaders = loaders;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

@@ -14,6 +14,6 @@ export default {
       exclude: 'node_modules/**' // only transpile our source code
     })
   ],
-  moduleName: 'reljs',
+  moduleName: 'relation',
   dest: 'relation.js'
 };

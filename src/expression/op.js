@@ -14,6 +14,10 @@ type StringOps =
 type BooleanOps =
   "eq" |
   "ne" |
+  "gt" |
+  "lt" |
+  "gte" |
+  "lte" |
   "and" |
   "or" |
   "not" |

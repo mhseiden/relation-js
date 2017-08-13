@@ -28,4 +28,5 @@ export default function (expression: Expression<*>, table: Table): DataColumn<*>
 }
 
 export * from './column.js'
+export * from './loaders.js'
 export { default as aggregate } from './aggregate.js'

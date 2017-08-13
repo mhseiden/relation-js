@@ -7,7 +7,8 @@
     "lint": "standard --fix \"src/**/*.js\"",
     "flow": "flow",
     "test": "npm run flow && jest -i ./src/",
-    "build": "npm run test && rollup -c && uglifyjs -c -m -o relation.min.js -- relation.js"
+    "build": "npm run test && rollup -c && uglifyjs -c -m -o relation.min.js -- relation.js",
+    "prepublishOnly": "npm run build"
   },
   "author": "Max Seiden <140dbs@gmail.com>",
   "license": "MIT",
@@ -19,6 +20,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-flow": "^6.23.0",
+    "babyparse": "^0.4.6",
     "benchmark": "^2.1.4",
     "eslint-plugin-flowtype": "^2.35.0",
     "flow-bin": "^0.51.0",

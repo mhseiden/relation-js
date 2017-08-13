@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <!-- benchmark libs -->
+    <script src="./lib/lodash.js"></script>
+    <script src="./lib/platform.js"></script>
+    <script src="./lib/benchmark.js"></script>
+
+    <!-- lib setup -->
+    <script src="../relation.js"></script>
+    <script src="./flights-data.js"></script>
+    <script src="./common.js"></script>
+
+    <style>
+      * {
+        font-family: sans-serif;
+      }
+      button {
+        font-size: 32px;
+        margin-bottom: 2rem;
+      }
+      table, th, td {
+        text-align: right;
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 0.1rem 0.5rem;
+        margin: 0;
+      }
+      th:first-child, td:first-child {
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="begin" onclick="benchmark();">Start</button>
+
+    <table id="results">
+      <tr>
+        <th>Benchmark</th>
+        <th>Mean Runtime (ms)</th>
+        <th>Deviation (ms)</th>
+        <th>Runs Sampled</th>
+      </tr>
+    </table>
+
+    <!-- benchmarks -->
+    <script src="./project.js"></script>
+  </body>
+</html>
