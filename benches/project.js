@@ -13,9 +13,8 @@
   enqueue('delay predicate', function() {
     const ref = new expression.Reference('delay');
     const lit = new expression.Literal(0);
-    const mul = new expression.Gte(ref, lit);
-    const plist = [['is delayed', mul]];
+    const gte = new expression.Gte(ref, lit);
+    const plist = [['is delayed', gte]];
     return new operator.Project(mkScan(), plist);
   });
-
 })();

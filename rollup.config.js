@@ -6,7 +6,11 @@ export default {
   plugins: [
     babel({
       babelrc: false,
-      plugins: ["transform-class-properties", "external-helpers"],
+      plugins: [
+        "transform-class-properties",
+        "closure-elimination",
+        "external-helpers"
+      ],
       presets: [
         "flow",
         ["env", { modules: false }]

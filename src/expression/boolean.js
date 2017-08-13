@@ -2,7 +2,7 @@
 import { type DataType, BOOLEAN_TYPE, same } from './type.js'
 import { Expression, BinaryNode, UnaryNode, type ReferenceMap } from './ast.js'
 
-function checkCmp(children, refs) {
+function checkCmp (children, refs) {
   const l = children[0].typecheck(refs)
   const r = children[1].typecheck(refs)
   same(l, r)

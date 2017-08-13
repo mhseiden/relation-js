@@ -1,4 +1,10 @@
 {
-  "presets": ["flow", "env"],
-  "plugins": ["transform-class-properties"]
+  "presets": [
+    "flow",
+    "env"
+  ],
+  "plugins": [
+    "transform-class-properties",
+    "closure-elimination"
+  ]
 }

@@ -140,6 +140,10 @@ var slicedToArray = function () {
   };
 }();
 
+function _typecheck(r) {
+  throw new Error('typecheck() is not implemented');
+}
+
 var Expression = function () {
   function Expression(children, op) {
     classCallCheck(this, Expression);
@@ -150,9 +154,7 @@ var Expression = function () {
 
   createClass(Expression, [{
     key: 'typecheck',
-    value: function typecheck(r) {
-      throw new Error('typecheck() is not implemented');
-    }
+    value: _typecheck
   }]);
   return Expression;
 }();
@@ -205,6 +207,14 @@ var BinaryNode = function (_Expression4) {
   return BinaryNode;
 }(Expression);
 
+function _typecheck$1(r) {
+  var t = r[this.name];
+  if (t == null) {
+    throw new Error('Missing reference ' + this.name);
+  }
+  return t;
+}
+
 var Reference = function (_LeafNode) {
   inherits(Reference, _LeafNode);
 
@@ -219,16 +229,22 @@ var Reference = function (_LeafNode) {
 
   createClass(Reference, [{
     key: 'typecheck',
-    value: function typecheck(r) {
-      var t = r[this.name];
-      if (t == null) {
-        throw new Error('Missing reference ' + this.name);
-      }
-      return t;
-    }
+    value: _typecheck$1
   }]);
   return Reference;
 }(LeafNode);
+
+function _typecheck2(r) {
+  if (typeof this.value === 'number') {
+    return NUMBER_TYPE;
+  } else if (typeof this.value === 'string') {
+    return STRING_TYPE;
+  } else if (typeof this.value === 'boolean') {
+    return BOOLEAN_TYPE;
+  }
+
+  return UNKNOWN_TYPE;
+}
 
 var Literal = function (_LeafNode2) {
   inherits(Literal, _LeafNode2);
@@ -244,17 +260,7 @@ var Literal = function (_LeafNode2) {
 
   createClass(Literal, [{
     key: 'typecheck',
-    value: function typecheck(r) {
-      if (typeof this.value === 'number') {
-        return NUMBER_TYPE;
-      } else if (typeof this.value === 'string') {
-        return STRING_TYPE;
-      } else if (typeof this.value === 'boolean') {
-        return BOOLEAN_TYPE;
-      }
-
-      return UNKNOWN_TYPE;
-    }
+    value: _typecheck2
   }]);
   return Literal;
 }(LeafNode);
@@ -322,6 +328,10 @@ function checkCmp(children, refs) {
   return BOOLEAN_TYPE;
 }
 
+function _typecheck$2(refs) {
+  return checkCmp(this.children, refs);
+}
+
 var Eq = function (_BinaryNode) {
   inherits(Eq, _BinaryNode);
 
@@ -332,12 +342,14 @@ var Eq = function (_BinaryNode) {
 
   createClass(Eq, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      return checkCmp(this.children, refs);
-    }
+    value: _typecheck$2
   }]);
   return Eq;
 }(BinaryNode);
+
+function _typecheck2$1(refs) {
+  return checkCmp(this.children, refs);
+}
 
 var Ne = function (_BinaryNode2) {
   inherits(Ne, _BinaryNode2);
@@ -349,12 +361,14 @@ var Ne = function (_BinaryNode2) {
 
   createClass(Ne, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      return checkCmp(this.children, refs);
-    }
+    value: _typecheck2$1
   }]);
   return Ne;
 }(BinaryNode);
+
+function _typecheck3(refs) {
+  return checkCmp(this.children, refs);
+}
 
 var Gt = function (_BinaryNode3) {
   inherits(Gt, _BinaryNode3);
@@ -366,12 +380,14 @@ var Gt = function (_BinaryNode3) {
 
   createClass(Gt, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      return checkCmp(this.children, refs);
-    }
+    value: _typecheck3
   }]);
   return Gt;
 }(BinaryNode);
+
+function _typecheck4(refs) {
+  return checkCmp(this.children, refs);
+}
 
 var Gte = function (_BinaryNode4) {
   inherits(Gte, _BinaryNode4);
@@ -383,12 +399,14 @@ var Gte = function (_BinaryNode4) {
 
   createClass(Gte, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      return checkCmp(this.children, refs);
-    }
+    value: _typecheck4
   }]);
   return Gte;
 }(BinaryNode);
+
+function _typecheck5(refs) {
+  return checkCmp(this.children, refs);
+}
 
 var Lt = function (_BinaryNode5) {
   inherits(Lt, _BinaryNode5);
@@ -400,12 +418,14 @@ var Lt = function (_BinaryNode5) {
 
   createClass(Lt, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      return checkCmp(this.children, refs);
-    }
+    value: _typecheck5
   }]);
   return Lt;
 }(BinaryNode);
+
+function _typecheck6(refs) {
+  return checkCmp(this.children, refs);
+}
 
 var Lte = function (_BinaryNode6) {
   inherits(Lte, _BinaryNode6);
@@ -417,12 +437,16 @@ var Lte = function (_BinaryNode6) {
 
   createClass(Lte, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      return checkCmp(this.children, refs);
-    }
+    value: _typecheck6
   }]);
   return Lte;
 }(BinaryNode);
+
+function _typecheck7(refs) {
+  var l = this.children[0].typecheck(refs);
+  var r = this.children[1].typecheck(refs);
+  return same(BOOLEAN_TYPE, same(l, r));
+}
 
 var And = function (_BinaryNode7) {
   inherits(And, _BinaryNode7);
@@ -434,14 +458,15 @@ var And = function (_BinaryNode7) {
 
   createClass(And, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      var l = this.children[0].typecheck(refs);
-      var r = this.children[1].typecheck(refs);
-      return same(BOOLEAN_TYPE, same(l, r));
-    }
+    value: _typecheck7
   }]);
   return And;
 }(BinaryNode);
+
+function _typecheck8(refs) {
+  var c = this.children[0].typecheck(refs);
+  return same(BOOLEAN_TYPE, c);
+}
 
 var Not = function (_UnaryNode) {
   inherits(Not, _UnaryNode);
@@ -453,13 +478,15 @@ var Not = function (_UnaryNode) {
 
   createClass(Not, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      var c = this.children[0].typecheck(refs);
-      return same(BOOLEAN_TYPE, c);
-    }
+    value: _typecheck8
   }]);
   return Not;
 }(UnaryNode);
+
+function _typecheck9(refs) {
+  this.children[0].typecheck(refs);
+  return BOOLEAN_TYPE;
+}
 
 var IsNull = function (_UnaryNode2) {
   inherits(IsNull, _UnaryNode2);
@@ -471,13 +498,16 @@ var IsNull = function (_UnaryNode2) {
 
   createClass(IsNull, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      this.children[0].typecheck(refs);
-      return BOOLEAN_TYPE;
-    }
+    value: _typecheck9
   }]);
   return IsNull;
 }(UnaryNode);
+
+function _typecheck$3(refs) {
+  var l = this.children[0].typecheck(refs);
+  var r = this.children[1].typecheck(refs);
+  return same(NUMBER_TYPE, same(l, r));
+}
 
 var Add = function (_BinaryNode) {
   inherits(Add, _BinaryNode);
@@ -489,14 +519,16 @@ var Add = function (_BinaryNode) {
 
   createClass(Add, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      var l = this.children[0].typecheck(refs);
-      var r = this.children[1].typecheck(refs);
-      return same(NUMBER_TYPE, same(l, r));
-    }
+    value: _typecheck$3
   }]);
   return Add;
 }(BinaryNode);
+
+function _typecheck2$2(refs) {
+  var l = this.children[0].typecheck(refs);
+  var r = this.children[1].typecheck(refs);
+  return same(NUMBER_TYPE, same(l, r));
+}
 
 var Sub = function (_BinaryNode2) {
   inherits(Sub, _BinaryNode2);
@@ -508,14 +540,16 @@ var Sub = function (_BinaryNode2) {
 
   createClass(Sub, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      var l = this.children[0].typecheck(refs);
-      var r = this.children[1].typecheck(refs);
-      return same(NUMBER_TYPE, same(l, r));
-    }
+    value: _typecheck2$2
   }]);
   return Sub;
 }(BinaryNode);
+
+function _typecheck3$1(refs) {
+  var l = this.children[0].typecheck(refs);
+  var r = this.children[1].typecheck(refs);
+  return same(NUMBER_TYPE, same(l, r));
+}
 
 var Mul = function (_BinaryNode3) {
   inherits(Mul, _BinaryNode3);
@@ -527,14 +561,16 @@ var Mul = function (_BinaryNode3) {
 
   createClass(Mul, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      var l = this.children[0].typecheck(refs);
-      var r = this.children[1].typecheck(refs);
-      return same(NUMBER_TYPE, same(l, r));
-    }
+    value: _typecheck3$1
   }]);
   return Mul;
 }(BinaryNode);
+
+function _typecheck4$1(refs) {
+  var l = this.children[0].typecheck(refs);
+  var r = this.children[1].typecheck(refs);
+  return same(NUMBER_TYPE, same(l, r));
+}
 
 var Div = function (_BinaryNode4) {
   inherits(Div, _BinaryNode4);
@@ -546,11 +582,7 @@ var Div = function (_BinaryNode4) {
 
   createClass(Div, [{
     key: 'typecheck',
-    value: function typecheck(refs) {
-      var l = this.children[0].typecheck(refs);
-      var r = this.children[1].typecheck(refs);
-      return same(NUMBER_TYPE, same(l, r));
-    }
+    value: _typecheck4$1
   }]);
   return Div;
 }(BinaryNode);
@@ -588,6 +620,48 @@ var index$1 = Object.freeze({
 	Div: Div
 });
 
+function zipWithNullSafe(l, r, f) {
+  var len = l.length;
+  if (len !== r.length) {
+    throw new Error("length doesn't match");
+  }
+
+  var o = l.slice(0);
+  for (var idx = 0; idx < len; idx++) {
+    var lval = o[idx];
+    if (lval == null) continue;
+
+    var rval = r[idx];
+    if (rval == null) {
+      o[idx] = null;
+    } else {
+      o[idx] = f(lval, rval);
+    }
+  }
+  return o;
+}
+
+function map(d, f) {
+  return d.map(f);
+}
+function mapNullSafe(d, f) {
+  return d.map(function (e) {
+    return e == null ? null : f(e);
+  });
+}
+
+function fill(count, value) {
+  var data = new Array(count);
+  if (data.fill) {
+    data.fill(value);
+  } else {
+    for (var i = 0; i < count; ++i) {
+      data[i] = value;
+    }
+  }
+  return data;
+}
+
 var DataColumn = function () {
   function DataColumn(type, data) {
     classCallCheck(this, DataColumn);
@@ -600,7 +674,7 @@ var DataColumn = function () {
     key: 'select',
     value: function select(selector) {
       return new DataColumn(this.type, this.data.filter(function (e, i) {
-        return selector[i] || false;
+        return !!selector[i] || false;
       }));
     }
   }], [{
@@ -666,10 +740,8 @@ var BooleanColumn = function (_DataColumn4) {
 }(DataColumn);
 
 function mkLiteralColumn(count, value) {
-  var data = [];
-  for (; count > 0; --count) {
-    data.push(value);
-  }switch (typeof value === 'undefined' ? 'undefined' : _typeof(value)) {
+  var data = fill(count, value);
+  switch (typeof value === 'undefined' ? 'undefined' : _typeof(value)) {
     case 'string':
       return new DataColumn(STRING_TYPE, data);
     case 'number':
@@ -679,34 +751,6 @@ function mkLiteralColumn(count, value) {
     default:
       return new DataColumn(UNKNOWN_TYPE, data);
   }
-}
-
-function zipWithNullSafe(l, r, f) {
-  var len = l.length;
-  if (len !== r.length) {
-    throw new Error("length doesn't match");
-  }
-
-  var out = [];
-  for (var idx = 0; idx < len; idx++) {
-    var lval = l[idx];
-    var rval = r[idx];
-    if (lval == null || rval == null) {
-      out.push(null);
-    } else {
-      out.push(f(lval, rval));
-    }
-  }
-  return out;
-}
-
-function map(d, f) {
-  return d.map(f);
-}
-function mapNullSafe(d, f) {
-  return d.map(function (e) {
-    return e == null ? null : f(e);
-  });
 }
 
 function binop(e, t, f) {
@@ -724,28 +768,36 @@ function binop(e, t, f) {
   return new NumberColumn(data);
 }
 
+function _ref(a, b) {
+  return a + b;
+}
+
 function add(e, t) {
-  return binop(e, t, function (a, b) {
-    return a + b;
-  });
+  return binop(e, t, _ref);
+}
+
+function _ref2(a, b) {
+  return a - b;
 }
 
 function sub(e, t) {
-  return binop(e, t, function (a, b) {
-    return a - b;
-  });
+  return binop(e, t, _ref2);
+}
+
+function _ref3$1(a, b) {
+  return a * b;
 }
 
 function mul(e, t) {
-  return binop(e, t, function (a, b) {
-    return a * b;
-  });
+  return binop(e, t, _ref3$1);
+}
+
+function _ref4(a, b) {
+  return a / b;
 }
 
 function div(e, t) {
-  return binop(e, t, function (a, b) {
-    return a / b;
-  });
+  return binop(e, t, _ref4);
 }
 
 function reference(e, t) {
@@ -793,54 +845,74 @@ function cmpBool(e, t, f) {
   return new BooleanColumn(data);
 }
 
+function _ref$1(a, b) {
+  return a === b;
+}
+
 function eq(e, t) {
-  return cmp(e, t, function (a, b) {
-    return a === b;
-  });
+  return cmp(e, t, _ref$1);
+}
+
+function _ref2$1(a, b) {
+  return a !== b;
 }
 
 function ne(e, t) {
-  return cmp(e, t, function (a, b) {
-    return a !== b;
-  });
+  return cmp(e, t, _ref2$1);
+}
+
+function _ref3$2(a, b) {
+  return a > b;
 }
 
 function gt(e, t) {
-  return cmp(e, t, function (a, b) {
-    return a > b;
-  });
+  return cmp(e, t, _ref3$2);
+}
+
+function _ref4$1(a, b) {
+  return a >= b;
 }
 
 function gte(e, t) {
-  return cmp(e, t, function (a, b) {
-    return a >= b;
-  });
+  return cmp(e, t, _ref4$1);
+}
+
+function _ref5(a, b) {
+  return a < b;
 }
 
 function lt(e, t) {
-  return cmp(e, t, function (a, b) {
-    return a < b;
-  });
+  return cmp(e, t, _ref5);
+}
+
+function _ref6$1(a, b) {
+  return a <= b;
 }
 
 function lte(e, t) {
-  return cmp(e, t, function (a, b) {
-    return a <= b;
-  });
+  return cmp(e, t, _ref6$1);
+}
+
+function _ref7(a, b) {
+  return a && b;
 }
 
 function and(e, t) {
-  return cmpBool(e, t, function (a, b) {
-    return a && b;
-  });
+  return cmpBool(e, t, _ref7);
+}
+
+function _ref8(a) {
+  return a == null;
 }
 
 function isnull(e, t) {
   var c = execute(e.children[0], t);
-  var data = map(c.data, function (a) {
-    return a == null;
-  });
+  var data = map(c.data, _ref8);
   return new BooleanColumn(data);
+}
+
+function _ref9(a) {
+  return !a;
 }
 
 function not(e, t) {
@@ -849,9 +921,7 @@ function not(e, t) {
     throw new Error('Runtime Error: wrong type');
   }
 
-  var data = mapNullSafe(c.data, function (a) {
-    return !a;
-  });
+  var data = mapNullSafe(c.data, _ref9);
   return new BooleanColumn(data);
 }
 
@@ -931,6 +1001,21 @@ function loadColumns(columns) {
 
 var DEFAULT_ID = 0;
 
+function _insert(elem) {
+  if (elem == null) {
+    return DEFAULT_ID;
+  }
+
+  var key = elem.toString();
+  var id = this.map[key];
+  if (id != null) {
+    return id;
+  }
+
+  this.map[key] = this.nextId;
+  return this.nextId++;
+}
+
 var KeyMap = function () {
   function KeyMap() {
     classCallCheck(this, KeyMap);
@@ -941,23 +1026,29 @@ var KeyMap = function () {
 
   createClass(KeyMap, [{
     key: 'insert',
-    value: function insert(elem) {
-      if (elem == null) {
-        return DEFAULT_ID;
-      }
-
-      var key = elem.toString();
-      var id = this.map[key];
-      if (id != null) {
-        return id;
-      }
-
-      this.map[key] = this.nextId;
-      return this.nextId++;
-    }
+    value: _insert
   }]);
   return KeyMap;
 }();
+
+function _insert2(row) {
+  var next = this.input.data[row];
+  this.current = aggregate$1(this.op, this.current, next);
+}
+
+function _type() {
+  switch (this.op) {
+    case 'min':
+    case 'max':
+      return this.input.type;
+    case 'count':
+    case 'cvl':
+    case 'sum':
+      return NUMBER_TYPE;
+    default:
+      throw new Error('Unexpected op: ' + this.op);
+  }
+}
 
 var Accumulator = function () {
   function Accumulator(op, input) {
@@ -975,13 +1066,107 @@ var Accumulator = function () {
     }
   }, {
     key: 'insert',
-    value: function insert(row) {
-      var next = this.input.data[row];
-      this.current = aggregate$1(this.op, this.current, next);
-    }
+    value: _insert2
+  }, {
+    key: 'type',
+    value: _type
   }]);
   return Accumulator;
 }();
+
+function _ref$2(acc) {
+  return acc.init();
+}
+
+function _insert3(row, key) {
+  if (key.length === 0) {
+    return this.global(row);
+  }
+
+  var keyString = key.toString();
+
+  var accs = this.accs[keyString];
+  if (accs == null) {
+    accs = this.init.map(_ref$2);
+    this.accs[keyString] = accs;
+  }
+
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = accs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var acc = _step.value;
+
+      acc.insert(row);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+}
+
+function _global(row) {
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    for (var _iterator2 = this.init[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var acc = _step2.value;
+
+      acc.insert(row);
+    }
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+        _iterator2.return();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+}
+
+function _ref2$2(init) {
+  return DataColumn.fromType(init.type(), []);
+}
+
+function _finish(global) {
+  var outputCount = this.init.length;
+  var output = this.init.map(_ref2$2);
+
+  if (global) {
+    for (var acc = 0; acc < outputCount; ++acc) {
+      output[acc].data.push(this.init[acc].current);
+    }
+  } else {
+    for (var key in this.accs) {
+      var accs = this.accs[key];
+      for (var _acc = 0; _acc < outputCount; ++_acc) {
+        output[_acc].data.push(accs[_acc].current);
+      }
+    }
+  }
+
+  return output;
+}
 
 var AggMap = function () {
   function AggMap(aggs, table) {
@@ -996,100 +1181,20 @@ var AggMap = function () {
 
   createClass(AggMap, [{
     key: 'insert',
-    value: function insert(row, key) {
-      if (key.length === 0) {
-        return this.global(row);
-      }
-
-      var keyString = key.toString();
-
-      var accs = this.accs[keyString];
-      if (accs == null) {
-        accs = this.init.map(function (acc) {
-          return acc.init();
-        });
-        this.accs[keyString] = accs;
-      }
-
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = accs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var acc = _step.value;
-
-          acc.insert(row);
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-    }
+    value: _insert3
   }, {
     key: 'global',
-    value: function global(row) {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
-
-      try {
-        for (var _iterator2 = this.init[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var acc = _step2.value;
-
-          acc.insert(row);
-        }
-      } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
-      }
-    }
+    value: _global
   }, {
     key: 'finish',
-    value: function finish(global) {
-      var outputCount = this.init.length;
-      var output = this.init.map(function (init) {
-        return DataColumn.fromType(init.input.type, []);
-      });
-
-      if (global) {
-        for (var acc = 0; acc < outputCount; ++acc) {
-          output[acc].data.push(this.init[acc].current);
-        }
-      } else {
-        for (var key in this.accs) {
-          var accs = this.accs[key];
-          for (var _acc = 0; _acc < outputCount; ++_acc) {
-            output[_acc].data.push(accs[_acc].current);
-          }
-        }
-      }
-
-      return output;
-    }
+    value: _finish
   }]);
   return AggMap;
 }();
+
+function _ref3$3() {
+  return new KeyMap();
+}
 
 var aggregate = function (table, keys, aggs) {
   var rowCount = table[0][1].data.length;
@@ -1098,9 +1203,7 @@ var aggregate = function (table, keys, aggs) {
   var keyData = keys.map(function (e) {
     return execute(e, table);
   });
-  var keyMaps = keyData.map(function () {
-    return new KeyMap();
-  });
+  var keyMaps = keyData.map(_ref3$3);
 
   var rowKey = new Uint32Array(keyCount);
   var aggMap = new AggMap(aggs, table);
@@ -1182,7 +1285,7 @@ function mkReferenceMap(s) {
   return refs;
 }
 
-var _execute = function (expression, table) {
+var _execute3 = function (expression, table) {
   var refs = mkReferenceMap(table);
   var outType = expression.typecheck(refs);
   var column = execute(expression, table);
@@ -1192,6 +1295,10 @@ var _execute = function (expression, table) {
   }
   return column;
 };
+
+function _execute() {
+  throw new Error('execute() not implemented');
+}
 
 var Operator = function () {
   function Operator(child) {
@@ -1211,12 +1318,14 @@ var Operator = function () {
     }
   }, {
     key: 'execute',
-    value: function execute() {
-      throw new Error('execute() not implemented');
-    }
+    value: _execute
   }]);
   return Operator;
 }();
+
+function _execute2() {
+  return this.table;
+}
 
 var Scan = function (_Operator) {
   inherits(Scan, _Operator);
@@ -1232,12 +1341,21 @@ var Scan = function (_Operator) {
 
   createClass(Scan, [{
     key: 'execute',
-    value: function execute() {
-      return this.table;
-    }
+    value: _execute2
   }]);
   return Scan;
 }(Operator);
+
+function _execute4() {
+  var child = this.child().execute();
+  return this.expressions.map(function (_ref) {
+    var _ref2 = slicedToArray(_ref, 2),
+        name = _ref2[0],
+        expr = _ref2[1];
+
+    return [name, _execute3(expr, child)];
+  });
+}
 
 var Project = function (_Operator2) {
   inherits(Project, _Operator2);
@@ -1253,19 +1371,29 @@ var Project = function (_Operator2) {
 
   createClass(Project, [{
     key: 'execute',
-    value: function execute() {
-      var child = this.child().execute();
-      return this.expressions.map(function (_ref) {
-        var _ref2 = slicedToArray(_ref, 2),
-            name = _ref2[0],
-            expr = _ref2[1];
-
-        return [name, _execute(expr, child)];
-      });
-    }
+    value: _execute4
   }]);
   return Project;
 }(Operator);
+
+function _ref3(l, r) {
+  return new And(l, r);
+}
+
+function _execute6() {
+  var child = this.child().execute();
+
+  var _execute5 = _execute3(this.predicate, child),
+      data = _execute5.data;
+
+  return child.map(function (_ref4) {
+    var _ref5 = slicedToArray(_ref4, 2),
+        name = _ref5[0],
+        col = _ref5[1];
+
+    return [name, col.select(data)];
+  });
+}
 
 var Filter = function (_Operator3) {
   inherits(Filter, _Operator3);
@@ -1275,31 +1403,29 @@ var Filter = function (_Operator3) {
 
     var _this3 = possibleConstructorReturn(this, (Filter.__proto__ || Object.getPrototypeOf(Filter)).call(this, child));
 
-    _this3.predicate = predicates.reduce(function (l, r) {
-      return new And(l, r);
-    });
+    _this3.predicate = predicates.reduce(_ref3);
     return _this3;
   }
 
   createClass(Filter, [{
     key: 'execute',
-    value: function execute() {
-      var child = this.child().execute();
-
-      var _execute2 = _execute(this.predicate, child),
-          data = _execute2.data;
-
-      return child.map(function (_ref3) {
-        var _ref4 = slicedToArray(_ref3, 2),
-            name = _ref4[0],
-            col = _ref4[1];
-
-        return [name, col.select(data)];
-      });
-    }
+    value: _execute6
   }]);
   return Filter;
 }(Operator);
+
+function _ref6(a) {
+  return a[1];
+}
+
+function _execute7() {
+  var _this5 = this;
+
+  var child = this.child().execute();
+  return aggregate(child, this.keys, this.aggs.map(_ref6)).map(function (c, i) {
+    return [_this5.aggs[i][0], c];
+  });
+}
 
 var Aggregate = function (_Operator4) {
   inherits(Aggregate, _Operator4);
@@ -1316,16 +1442,7 @@ var Aggregate = function (_Operator4) {
 
   createClass(Aggregate, [{
     key: 'execute',
-    value: function execute() {
-      var _this5 = this;
-
-      var child = this.child().execute();
-      return aggregate(child, this.keys, this.aggs.map(function (a) {
-        return a[1];
-      })).map(function (c, i) {
-        return [_this5.aggs[i][0], c];
-      });
-    }
+    value: _execute7
   }]);
   return Aggregate;
 }(Operator);

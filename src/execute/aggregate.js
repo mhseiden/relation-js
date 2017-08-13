@@ -2,6 +2,7 @@
 import { type Expression, Aggregate } from '../expression/index.js'
 import { type Aggregator } from '../expression/op.js'
 import { type Table, DataColumn } from './column.js'
+import { type DataType, NUMBER_TYPE } from '../expression/type.js'
 import execute from './execute.js'
 
 const DEFAULT_ID = 0
@@ -53,6 +54,20 @@ class Accumulator {
     const next = this.input.data[row]
     this.current = aggregate(this.op, this.current, next)
   }
+
+  type (): DataType {
+    switch (this.op) {
+      case 'min':
+      case 'max':
+        return this.input.type
+      case 'count':
+      case 'cvl':
+      case 'sum':
+        return NUMBER_TYPE
+      default:
+        throw new Error(`Unexpected op: ${this.op}`)
+    }
+  }
 }
 
 class AggMap {
@@ -94,7 +109,7 @@ class AggMap {
   finish (global: boolean): Array<DataColumn<*>> {
     const outputCount = this.init.length
     const output = this.init.map(init => {
-      return DataColumn.fromType(init.input.type, [])
+      return DataColumn.fromType(init.type(), [])
     })
 
     if (global) {

@@ -6,17 +6,19 @@ export function zipWithNullSafe<T, U, V> (l: Array<?T>, r: Array<?U>, f: (T, U) 
     throw new Error("length doesn't match")
   }
 
-  const out = []
+  const o = ((l.slice(0)): any)
   for (let idx = 0; idx < len; idx++) {
-    const lval = l[idx]
+    const lval = (o[idx]: ?T)
+    if (lval == null) continue
+
     const rval = r[idx]
-    if (lval == null || rval == null) {
-      out.push(null)
+    if (rval == null) {
+      o[idx] = null
     } else {
-      out.push(f(lval, rval))
+      o[idx] = f(lval, rval)
     }
   }
-  return out
+  return o
 }
 
 export function map<T, U> (d: Array<?T>, f: (?T) => U): Array<U> {
@@ -24,4 +26,14 @@ export function map<T, U> (d: Array<?T>, f: (?T) => U): Array<U> {
 }
 export function mapNullSafe<T, U> (d: Array<?T>, f: (T) => U): Array<?U> {
   return d.map(e => e == null ? null : f(e))
+}
+
+export function fill<T> (count: number, value: T): Array<T> {
+  const data: Array<T> = new Array(count)
+  if (data.fill) {
+    data.fill(value)
+  } else {
+    for (var i = 0; i < count; ++i) data[i] = value
+  }
+  return data
 }

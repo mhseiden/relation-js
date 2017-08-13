@@ -1,6 +1,7 @@
 (function() {
-  const WAIT_TIME = 10;
-  const queue = [];
+  const WAIT_TIME = 10,
+        ROWS = flights[0].data.length,
+        queue = [];
 
   window.enqueue = function(name, fn) {
     const plan = fn();
@@ -34,6 +35,7 @@
     row.appendChild(mkCell(''));
     row.appendChild(mkCell(''));
     row.appendChild(mkCell(''));
+    row.appendChild(mkCell(''));
 
     const table = document.getElementById('results');
     table.appendChild(row);
@@ -48,9 +50,10 @@
           deviation = run.stats.deviation,
           sample = run.stats.sample;
 
-    this.row.children[1].innerText = (1000 * mean).toFixed(2);
-    this.row.children[2].innerText = (1000 * deviation).toFixed(2);
-    this.row.children[3].innerText = sample.length;
+    this.row.children[1].innerText = ((1000000000 * mean) / ROWS).toFixed(2);
+    this.row.children[2].innerText = (1000 * mean).toFixed(2);
+    this.row.children[3].innerText = (1000 * deviation).toFixed(2);
+    this.row.children[4].innerText = sample.length;
 
     setTimeout(prepare, WAIT_TIME);
   }

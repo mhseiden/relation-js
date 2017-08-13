@@ -8,6 +8,8 @@ import {
   UNKNOWN_TYPE
 } from '../expression/type.js'
 
+import * as util from './util.js'
+
 export class DataColumn<T> {
   data: Array<?T>;
   type: DataType;
@@ -32,7 +34,7 @@ export class DataColumn<T> {
 
   select (selector: Array<?boolean>): DataColumn<?T> {
     return new DataColumn(this.type, this.data.filter((e, i) => {
-      return selector[i] || false
+      return !!selector[i] || false
     }))
   }
 }
@@ -62,9 +64,7 @@ export class BooleanColumn extends DataColumn<boolean> {
 }
 
 export function mkLiteralColumn (count: number, value: Value): DataColumn<*> {
-  const data: Array<Value> = []
-  for (; count > 0; --count) data.push(value)
-
+  const data: Array<Value> = util.fill(count, value)
   switch (typeof value) {
     case 'string': return new DataColumn(STRING_TYPE, data)
     case 'number': return new DataColumn(NUMBER_TYPE, data)

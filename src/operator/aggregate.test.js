@@ -10,7 +10,7 @@ function mkScan (): Scan {
 
 // globals
 test('count(*) global', () => {
-  const ref = new Reference('number')
+  const ref = new Reference('string')
   const count = new Count(ref)
 
   const op = new Aggregate(mkScan(), [], [['count', count]])
